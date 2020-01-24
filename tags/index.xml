@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on ADRW</title>
+    <link>https://adrwh.github.io/tags/</link>
+    <description>Recent content in Tags on ADRW</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 23 Jan 2020 21:27:54 +1100</lastBuildDate>
+    
+	<atom:link href="https://adrwh.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>alerting</title>
+      <link>https://adrwh.github.io/tags/alerting/</link>
+      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/alerting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>elasticsearch</title>
+      <link>https://adrwh.github.io/tags/elasticsearch/</link>
+      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/elasticsearch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>https://adrwh.github.io/tags/security/</link>
+      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>watcher</title>
+      <link>https://adrwh.github.io/tags/watcher/</link>
+      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/watcher/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>msgraph</title>
+      <link>https://adrwh.github.io/tags/msgraph/</link>
+      <pubDate>Wed, 01 Jan 2020 15:38:04 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/msgraph/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>teams</title>
+      <link>https://adrwh.github.io/tags/teams/</link>
+      <pubDate>Wed, 01 Jan 2020 15:38:04 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/teams/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

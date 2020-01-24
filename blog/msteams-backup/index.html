@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" href="/css/syntax.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {
+    font-family: "Raleway", sans-serif;
+}
+a:link,a:visited,a:hover {
+     text-decoration: none;
+}
+</style>
+</head>
+<body>
+  
+
+
+
+<section class="section">
+
+  <div class="container">
+    
+<div class="content">
+    <h3 class="title">MS Teams Channel Conversation &#34;Backup&#34;</h3>
+        
+
+            Jan 1, 2020
+
+        
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/msgraph">msgraph</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/teams">teams</a>
+            </span>
+            
+        
+    <p><p>We use Microsoft Teams, and probably as most, create a new team when it was first released, however have now decided to move to a new Team.  This is all fine, but when we went looking for a &ldquo;migration&rdquo; pathway, there wasn't one.  Instead we settled on making a backup/copy for historical purposes.</p>
+<p>I went searching PowerShell for cmdlets to &ldquo;backup&rdquo; Teams and didn't find any. I then went searching the Microsoft Graph API and found the Teams API resources. One of the endpoints was called <span class="has-background-light has-text-danger">List Channel Messages (Link below)</span>, bingo!</p>
+<p><a href="https://docs.microsoft.com/en-us/graph/api/channel-list-messages">https://docs.microsoft.com/en-us/graph/api/channel-list-messages</a></p>
+<p>When you request the ms graph api, you need to provide a bearer token in the authorisation header. To get a token you need to setup an Azure AD Application, and go through one of the oauth flows.</p>
+<p>With my app ready, I decided to use PowerShell to make the necessary authentication requests, get my access token, then makes requests to the Teams graph to list the channel messages.</p>
+<p>Note that we have our access token we're ready to start poking the MS Graph API.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">83
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># This function takes 3 parameters, then pulls messages from the MS Graph API</span>
+<span style="color:#66d9ef">function</span> GetMessages {
+    <span style="color:#66d9ef">param</span> (<span style="color:#66d9ef">[String]</span>$team_id, <span style="color:#66d9ef">[String]</span>$channel_id, <span style="color:#66d9ef">[String]</span>$file_name)
+    <span style="color:#75715e"># The initial MS Graph request to the MS Teams List Channel Messages endpoint</span>
+    $uri = <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">https://graph.microsoft.com/beta/teams/</span><span style="color:#e6db74">$</span><span style="color:#e6db74">team_id/channels/</span><span style="color:#e6db74">$</span><span style="color:#e6db74">channel_id/messages</span><span style="color:#e6db74">&#34;</span>
+
+    <span style="color:#66d9ef">do</span> {
+        <span style="color:#75715e"># Make your first request to the API</span>
+        <span style="color:#75715e"># Note:  The $headers variable is a hash table with your Authorization header and Bearer token etc</span>
+        $res = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get -SslProtocol<span style="color:#960050;background-color:#1e0010">:</span>Tls12
+        <span style="color:#75715e"># Get the next URL</span>
+        $next = $res.<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">@odata.nextLink</span><span style="color:#e6db74">&#34;</span>
+        <span style="color:#75715e"># If there is a next URL, update $uri ready for the next iteration</span>
+        <span style="color:#66d9ef">if</span> ($next) { $uri = $next }
+        <span style="color:#75715e"># Loop through each message</span>
+        $res.value | <span style="color:#66d9ef">ForEach</span>-Object {
+            <span style="color:#75715e"># Assign the message content to $raw so that we can strip out the text</span>
+            $raw = $_.body.content
+            <span style="color:#75715e"># This regex will strip out all HTML tags, just leaving the text content</span>
+            $msg = $raw <span style="color:#f92672">-replace</span> <span style="color:#e6db74">&#39;&lt;[^&gt;]+&gt;&#39;</span>
+            <span style="color:#75715e"># Assign the message created datetime</span>
+            $date = $_.createdDateTime
+            <span style="color:#75715e"># Build up the HTML rows for each message, we will use this later.  Note, you can use &lt;table&gt; or any other style you prefer</span>
+            $body += <span style="color:#e6db74">&#39;&lt;hr&gt;&lt;div&gt;&lt;time datetime=&#34;&#39;</span> + $date + <span style="color:#e6db74">&#39;&#34;&gt;&#39;</span> + $date + <span style="color:#e6db74">&#39;&lt;/time&gt; | &#39;</span> + $msg + <span style="color:#e6db74">&#39;&lt;/div&gt;&#39;</span>
+        }
+        <span style="color:#75715e"># I put a sleep in because i kept hitting the rate limitations without it</span>
+        Start-Sleep -Milliseconds 500
+    <span style="color:#75715e"># Keep looping as long as there is a Next URL</span>
+    } <span style="color:#66d9ef">while</span> ($null <span style="color:#f92672">-ne</span> $next)
+
+<span style="color:#75715e"># This is the HTML template.  We will &#34;insert&#34; the rows ($body) we built above.  Again, feel free to style this however you like</span>
+$template = <span style="color:#e6db74">@&#39;
+</span><span style="color:#e6db74">&lt;!DOCTYPE html&gt;
+</span><span style="color:#e6db74">&lt;html lang=&#34;en&#34;&gt;
+</span><span style="color:#e6db74">&lt;head&gt;
+</span><span style="color:#e6db74">&lt;meta charset=&#34;UTF-8&#34;&gt;
+</span><span style="color:#e6db74">&lt;meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34;&gt;
+</span><span style="color:#e6db74">&lt;meta http-equiv=&#34;X-UA-Compatible&#34; content=&#34;ie=edge&#34;&gt;
+</span><span style="color:#e6db74">&lt;style&gt;
+</span><span style="color:#e6db74">body {font-size: small}
+</span><span style="color:#e6db74">img {display: none}
+</span><span style="color:#e6db74">hr {border-top: 0.3px solid lightgrey}
+</span><span style="color:#e6db74">&lt;/style&gt;
+</span><span style="color:#e6db74">&lt;/head&gt;
+</span><span style="color:#e6db74">&lt;body&gt;
+</span><span style="color:#e6db74">...body
+</span><span style="color:#e6db74">&lt;/body&gt;
+</span><span style="color:#e6db74">&lt;/html&gt;
+</span><span style="color:#e6db74">&#39;@</span>
+    <span style="color:#75715e"># Here we replace &#34;...body&#34; with our HTML body and save it to file</span>
+    $template <span style="color:#f92672">-replace</span> <span style="color:#e6db74">&#39;...body&#39;</span>, $body | Out-File -Force <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">./</span><span style="color:#e6db74">$</span><span style="color:#e6db74">file_name.html</span><span style="color:#e6db74">&#34;</span>
+    $body = $null
+}  <span style="color:#75715e"># This is the end of the funtion</span>
+
+<span style="color:#75715e"># Here we setup some starting variables.</span>
+$team_id = <span style="color:#e6db74">&#39;nnn-nnn-nnn-nnn-nnn&#39;</span>
+$channel_id = <span style="color:#e6db74">&#39;nnn@thread.skype&#39;</span>
+$channel_displayName = <span style="color:#e6db74">&#39;nnn.html&#39;</span>
+
+<span style="color:#75715e"># Here we call the GetMessage function. Obviously you would put this into a foreach loop and loop through each channel in your Team</span>
+GetMessages -team_id $team_id -channel_id $channel_id -file_name $channel_displayName
+~~~
+
+&lt;/div&gt;</code></pre></td></tr></table>
+</div>
+</div></p>
+</div>
+
+  </div>
+
+</section>
+
+
+
+<footer class="footer">
+    <div class="tabs is-small">
+        <ul>
+          <li class="is-active"><a class="navbar-item" href="/">home</a></li>
+          <li><a href="/blog">posts</a></li>
+          <li><a href="/tags">tags</a></li>
+        </ul>
+      </div>
+      <div class="">
+        <a href="https://bulma.io">
+          <img src="/img/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+        </a>
+      </div>
+</footer>
+
+
+</body>
+</html>

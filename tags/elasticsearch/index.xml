@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>elasticsearch on ADRW</title>
+    <link>https://adrwh.github.io/tags/elasticsearch/</link>
+    <description>Recent content in elasticsearch on ADRW</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 23 Jan 2020 21:27:54 +1100</lastBuildDate>
+    
+	<atom:link href="https://adrwh.github.io/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Creating Watchers in Elasticsearch to catch changes to the Domain Admin security group</title>
+      <link>https://adrwh.github.io/blog/elastic-watchers/</link>
+      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      
+      <guid>https://adrwh.github.io/blog/elastic-watchers/</guid>
+      <description>We are going to setup an alert for whenever our Domain Admin group is changed. This is great for security context as well as general auditing.
+ Please note: This is not a defender safeguard to detect privilege escalation. Smart attackers will not be adding themselves to the Domain Admin group.
+ First create your search using Kibana. In this example i am going to search for changes to the Domain Admins security group.</description>
+    </item>
+    
+  </channel>
+</rss>

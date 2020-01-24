@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" href="/css/syntax.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {
+    font-family: "Raleway", sans-serif;
+}
+a:link,a:visited,a:hover {
+     text-decoration: none;
+}
+</style>
+</head>
+<body>
+  
+
+
+
+<section class="section">
+
+  <div class="container">
+    
+<div class="content">
+    <h3 class="title">Creating Watchers in Elasticsearch to catch changes to the Domain Admin security group</h3>
+        
+
+            Jan 23, 2020
+
+        
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/elasticsearch">elasticsearch</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/watcher">watcher</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/alerting">alerting</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/security">security</a>
+            </span>
+            
+        
+    <p><p>We are going to setup an alert for whenever our Domain Admin group is changed.  This is great for security context as well as general auditing.</p>
+<blockquote>
+<p>Please note: This is not a defender safeguard to detect privilege escalation.  Smart attackers will not be adding themselves to the Domain Admin group.</p>
+</blockquote>
+<p>First create your search using Kibana.  In this example i am going to search for changes to the Domain Admins security group.  In the Kibana search bar, type <code>winlog.event_data.TargetSid:S-1-5-21-your domain sid-512 and event.code: 4737</code></p>
+<p>AD Global Security Group changes are audited in EventID 4737, and the Domain Admins group SID can be found with <code>Get-ADGroup &quot;Domain Admins&quot;</code>. More information here <a href="https://support.microsoft.com/en-au/help/243330/well-known-security-identifiers-in-windows-operating-systems">https://support.microsoft.com/en-au/help/243330/well-known-security-identifiers-in-windows-operating-systems</a></p>
+<p>Click the Inspect link.  This will pop-out a new window showing details about the search statistics, the request and the response.  Click on the Request tab, which will show you the raw JSON used to make the request.  Technically you can save this to file and make the same search using the CLI, Curl etc.  Now scroll down the JSON request, look for the <code>query: {}</code> object and copy it.  Armed with the search query JSON object we are now ready to check out how the Watcher API works.</p>
+<p>Read about Elastic Watcher API here <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-put-watch.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-put-watch.html</a></p>
+<p>So to create a new watcher we have to send a <code>PUT</code> request with some <code>parameters</code> and a <code>body</code> to <code>_watcher/watch/&lt;watch_id&gt;</code> where the <code>watch_id</code> is the name or identifier we choose.  The request <code>body</code> needs a JSON document with a <code>trigger</code>, <code>input</code>, <code>condition</code> and <code>actions</code> objects.</p>
+<p>We want the watcher to run every 5 minutes, then look back over the last 5 minutes and search for 1 or more hits, using the search query we built earlier.  Then we want it to perform an action like, send an email to the administrator or post a message to our Team.</p>
+<p>In this example i am going to use the following criteria to build my watcher <code>body</code> object..</p>
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Description</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trigger</td>
+<td>every 5 minutes</td>
+<td></td>
+</tr>
+<tr>
+<td>input</td>
+<td>if the Domain Admins group is changed</td>
+<td></td>
+</tr>
+<tr>
+<td>condition</td>
+<td>if results greater than 0</td>
+<td></td>
+</tr>
+<tr>
+<td>actions</td>
+<td>send a message to MS Teams</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Here is the full request that will create my watcher.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">PUT _watcher/watch/domain_admin_group_was_changed // &lt;-- this is the name/id <span style="color:#66d9ef">for</span> your watcher.
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;trigger&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;schedule&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;interval&#34;</span>: <span style="color:#e6db74">&#34;5m&#34;</span>  // &lt; -- I want the watcher to run every <span style="color:#ae81ff">5</span> minutes
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;input&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;search&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;request&#34;</span>: <span style="color:#f92672">{</span>
+        <span style="color:#e6db74">&#34;indices&#34;</span>: <span style="color:#f92672">[</span>
+          <span style="color:#e6db74">&#34;winlogbeat-*&#34;</span> // &lt;-- set the index you want to search
+        <span style="color:#f92672">]</span>,
+        <span style="color:#e6db74">&#34;body&#34;</span>: <span style="color:#f92672">{</span>
+          <span style="color:#e6db74">&#34;query&#34;</span>: <span style="color:#f92672">{</span>  // &lt;-- This is the query you copied from the kibana search earlier, paste it here.
+            <span style="color:#e6db74">&#34;bool&#34;</span>: <span style="color:#f92672">{</span>
+              <span style="color:#e6db74">&#34;must&#34;</span>: <span style="color:#f92672">[</span><span style="color:#f92672">]</span>,
+              <span style="color:#e6db74">&#34;filter&#34;</span>: <span style="color:#f92672">[</span>
+                <span style="color:#f92672">{</span>
+                  <span style="color:#e6db74">&#34;match_all&#34;</span>: <span style="color:#f92672">{</span><span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>,
+                <span style="color:#f92672">{</span>
+                  <span style="color:#e6db74">&#34;match_phrase&#34;</span>: <span style="color:#f92672">{</span>
+                    <span style="color:#e6db74">&#34;winlog.event_data.TargetSid&#34;</span>: <span style="color:#f92672">{</span>
+                      <span style="color:#e6db74">&#34;query&#34;</span>: <span style="color:#e6db74">&#34;S-1-5-21-nnnn-512&#34;</span> // &lt;-- replace this with your Domain Admins SID
+                    <span style="color:#f92672">}</span>
+                  <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>,
+                <span style="color:#f92672">{</span>
+                  <span style="color:#e6db74">&#34;match_phrase&#34;</span>: <span style="color:#f92672">{</span>
+                    <span style="color:#e6db74">&#34;winlog.event_id&#34;</span>: <span style="color:#f92672">{</span>
+                      <span style="color:#e6db74">&#34;query&#34;</span>: <span style="color:#ae81ff">4737</span>
+                    <span style="color:#f92672">}</span>
+                  <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>,
+                <span style="color:#f92672">{</span>
+                  <span style="color:#e6db74">&#34;range&#34;</span>: <span style="color:#f92672">{</span> // &lt;-- Search back the last <span style="color:#ae81ff">5</span> minutes
+                    <span style="color:#e6db74">&#34;@timestamp&#34;</span>: <span style="color:#f92672">{</span>
+                      <span style="color:#e6db74">&#34;from&#34;</span>: <span style="color:#e6db74">&#34;now-5m&#34;</span>,
+                      <span style="color:#e6db74">&#34;to&#34;</span>: <span style="color:#e6db74">&#34;now&#34;</span>
+                    <span style="color:#f92672">}</span>
+                  <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+              <span style="color:#f92672">]</span>,
+              <span style="color:#e6db74">&#34;should&#34;</span>: <span style="color:#f92672">[</span><span style="color:#f92672">]</span>,
+              <span style="color:#e6db74">&#34;must_not&#34;</span>: <span style="color:#f92672">[</span><span style="color:#f92672">]</span>
+            <span style="color:#f92672">}</span>
+          <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;condition&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;compare&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;ctx.payload.hits.total&#34;</span>: <span style="color:#f92672">{</span>
+        <span style="color:#e6db74">&#34;gt&#34;</span>: <span style="color:#ae81ff">0</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;actions&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;teams_webhook&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;transform&#34;</span>: <span style="color:#f92672">{</span>
+        <span style="color:#e6db74">&#34;script&#34;</span>: <span style="color:#f92672">{</span> // &lt;-- This script is needed to format the message to meet the MS Teams message requirements.
+          <span style="color:#e6db74">&#34;source&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span><span style="color:#e6db74">&#34;
+</span><span style="color:#e6db74">            def pl = ctx.payload;
+</span><span style="color:#e6db74">            pl[&#34;</span>@type<span style="color:#e6db74">&#34;] = &#39;MessageCard&#39;;
+</span><span style="color:#e6db74">            pl[&#34;</span>@context<span style="color:#e6db74">&#34;] = &#39;http://schema.org/extensions&#39;;
+</span><span style="color:#e6db74">            pl.themeColor = &#39;ff0000&#39;;
+</span><span style="color:#e6db74">            pl.summary = &#34;</span>The Summary<span style="color:#e6db74">&#34;;
+</span><span style="color:#e6db74">            pl.title = &#39;4737 The Domain Admin group has changed!&#39;;
+</span><span style="color:#e6db74">            return pl; 
+</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;&#34;</span>,
+          <span style="color:#e6db74">&#34;lang&#34;</span>: <span style="color:#e6db74">&#34;painless&#34;</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>,
+      <span style="color:#e6db74">&#34;webhook&#34;</span>: <span style="color:#f92672">{</span>
+        <span style="color:#e6db74">&#34;scheme&#34;</span>: <span style="color:#e6db74">&#34;https&#34;</span>,
+        <span style="color:#e6db74">&#34;host&#34;</span>: <span style="color:#e6db74">&#34;outlook.office.com&#34;</span>,
+        <span style="color:#e6db74">&#34;port&#34;</span>: 443,
+        <span style="color:#e6db74">&#34;method&#34;</span>: <span style="color:#e6db74">&#34;post&#34;</span>,
+        <span style="color:#e6db74">&#34;path&#34;</span>: <span style="color:#e6db74">&#34;/your-teams-webhook-id&#34;</span>, // &lt;-- put your own Teams webhook ID here.
+        <span style="color:#e6db74">&#34;params&#34;</span>: <span style="color:#f92672">{</span><span style="color:#f92672">}</span>,
+        <span style="color:#e6db74">&#34;headers&#34;</span>: <span style="color:#f92672">{</span>
+          <span style="color:#e6db74">&#34;Content-Type&#34;</span>: <span style="color:#e6db74">&#34;application/json&#34;</span>
+        <span style="color:#f92672">}</span>,
+        <span style="color:#e6db74">&#34;body&#34;</span>: <span style="color:#e6db74">&#34;{{#toJson}}ctx.payload{{/toJson}}&#34;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>Now send this PUT request to your Elastcsearch service and the watch is created.</p>
+<p>The next time, a change is made to your Domain Admins group, you will get a message like this in Teams.</p>
+<p><img src="/img/domain-admin-was-changed-teams-alert.png" alt="domain-admin-was-changed-teams-alert.png"></p>
+</p>
+</div>
+
+  </div>
+
+</section>
+
+
+
+<footer class="footer">
+    <div class="tabs is-small">
+        <ul>
+          <li class="is-active"><a class="navbar-item" href="/">home</a></li>
+          <li><a href="/blog">posts</a></li>
+          <li><a href="/tags">tags</a></li>
+        </ul>
+      </div>
+      <div class="">
+        <a href="https://bulma.io">
+          <img src="/img/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+        </a>
+      </div>
+</footer>
+
+
+</body>
+</html>
