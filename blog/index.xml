@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>Creating Watchers in Elasticsearch to catch changes to the Domain Admin security group</title>
+      <title>Creating Watchers in Elasticsearch to catch Domain Admin security group changes</title>
       <link>https://adrwh.github.io/blog/elastic-watchers/</link>
       <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
       
