@@ -6,10 +6,28 @@
     <description>Recent content in Tags on ADRW</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jan 2020 21:27:54 +1100</lastBuildDate>
+    <lastBuildDate>Thu, 30 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://adrwh.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ansible</title>
+      <link>https://adrwh.github.io/tags/ansible/</link>
+      <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/ansible/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kerberos</title>
+      <link>https://adrwh.github.io/tags/kerberos/</link>
+      <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://adrwh.github.io/tags/kerberos/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>alerting</title>

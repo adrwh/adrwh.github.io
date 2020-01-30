@@ -4,16 +4,36 @@
   
   <url>
     <loc>https://adrwh.github.io/</loc>
-    <lastmod>2020-01-23T21:27:54+11:00</lastmod>
+    <lastmod>2020-01-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://adrwh.github.io/tags/alerting/</loc>
-    <lastmod>2020-01-23T21:27:54+11:00</lastmod>
+    <loc>https://adrwh.github.io/tags/ansible/</loc>
+    <lastmod>2020-01-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://adrwh.github.io/blog/</loc>
+    <lastmod>2020-01-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://adrwh.github.io/tags/kerberos/</loc>
+    <lastmod>2020-01-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://adrwh.github.io/blog/ansible-macos-kerberos/</loc>
+    <lastmod>2020-01-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://adrwh.github.io/tags/</loc>
+    <lastmod>2020-01-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://adrwh.github.io/tags/alerting/</loc>
     <lastmod>2020-01-23T21:27:54+11:00</lastmod>
   </url>
   
@@ -29,11 +49,6 @@
   
   <url>
     <loc>https://adrwh.github.io/tags/security/</loc>
-    <lastmod>2020-01-23T21:27:54+11:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://adrwh.github.io/tags/</loc>
     <lastmod>2020-01-23T21:27:54+11:00</lastmod>
   </url>
   

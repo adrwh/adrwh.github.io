@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" href="/css/syntax.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {
+    font-family: "Raleway", sans-serif;
+}
+a:link,a:visited,a:hover {
+     text-decoration: none;
+}
+</style>
+</head>
+<body>
+  
+
+
+
+<section class="section">
+
+  <div class="container">
+    
+<div class="content">
+    <h3 class="title">Setup Ansible on your Mac to connect to remote Windows Domain Servers/Workstations using secure Kerberos</h3>
+        
+
+            Jan 30, 2020
+
+        
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/ansible">ansible</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/kerberos">kerberos</a>
+            </span>
+            
+        
+    <p><p>This article shows you how to setup Ansible on your Mac to connect to remote Windows Domain Servers/Workstations using secure Kerberos.</p>
+<p>Ansible supports authentication to Windows using NTLM over http (bad), NTLM over https (better) our Kerberos over HTTPS (best).  Surprisingly it's the easiest to setup also, so no excuses.</p>
+<p>We're going to cover the following setup requirements.</p>
+<ul>
+<li>Installing Pywinrm</li>
+</ul>
+</p>
+</div>
+<div id="comments">
+
+        <script>
+    var id =  3 ;
+  
+    if (id)
+    {
+      let url = "https://github.com/adrwh/blog/issues/".concat(id);
+      let api_url = "https://api.github.com/repos/adrwh/blog/issues/".concat(id, "/comments");
+      
+      var commentsDiv = document.getElementById("comments");
+  
+      let xhr = new XMLHttpRequest();
+      xhr.responseType = "json";
+      xhr.open("GET", api_url);
+      xhr.setRequestHeader("Accept", "application/vnd.github.v3.html+json");
+      xhr.send();
+  
+      xhr.onload = function()
+      {
+        if (xhr.status != 200)
+        {
+          let errorText = document.createElement("p");
+          errorText.innerHTML = "<i>Comments for this post yet are not opened yet (or you have GitHub scripts disabled).</i>";
+          commentsDiv.appendChild(errorText);
+        }
+        else
+        {
+          let comments = xhr.response;
+  
+          let mainHeader = document.createElement("h2");
+          mainHeader.innerHTML = "Comments: ".concat(comments.length);
+          commentsDiv.appendChild(mainHeader);
+  
+          let issueLink = document.createElement("p");
+          issueLink.innerHTML = "<i>You can leave a comment using this <a href='".concat(url, "'>GitHub comment</a>.</i>");
+          commentsDiv.appendChild(issueLink);
+          
+          comments.forEach(function(comment)
+          {
+              let commentContent = document.createElement("div");
+              commentContent.setAttribute('class', 'gh-comment')
+              commentContent.innerHTML = "".concat(
+                  "<div class='gh-header'>",
+                    "<div style='margin:auto 0;'>",
+                      "<b><a class='gh-username' href='", comment.user.html_url, "'>", comment.user.login, "</a></b>",
+                      " commented at <em>", new Date(comment.created_at), "</em>",
+                    "</div>",
+                  "</div>",
+                  "<div class='gh-body'>",
+                    comment.body_html,
+                  "</div>"
+              );
+              commentsDiv.appendChild(commentContent);
+          });
+        }
+      };
+  
+      xhr.onerror = function()
+      {
+        let errorText = document.createElement("p");
+        errorText.innerHTML = "<i>Some error loading comments.</i>";
+        commentsDiv.appendChild(errorText);
+      };
+    }
+  </script>
+    
+</div>
+
+  </div>
+
+</section>
+
+
+
+<footer class="footer">
+    <div class="tabs is-small">
+        <ul>
+          <li class="is-active"><a class="navbar-item" href="/">home</a></li>
+          <li><a href="/blog">posts</a></li>
+          <li><a href="/tags">tags</a></li>
+        </ul>
+      </div>
+      <div class="">
+        <a href="https://bulma.io">
+          <img src="/img/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+        </a>
+      </div>
+</footer>
+
+
+</body>
+</html>
