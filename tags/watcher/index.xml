@@ -6,7 +6,7 @@
     <description>Recent content in watcher on ADRW</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jan 2020 21:27:54 +1100</lastBuildDate>
+    <lastBuildDate>Thu, 23 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://adrwh.github.io/tags/watcher/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Creating Watchers in Elasticsearch to catch Domain Admin security group changes</title>
       <link>https://adrwh.github.io/blog/elastic-watchers/</link>
-      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      <pubDate>Thu, 23 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>https://adrwh.github.io/blog/elastic-watchers/</guid>
       <description>We are going to setup an alert for whenever our Domain Admin group is changed. This is great for security context as well as general auditing.

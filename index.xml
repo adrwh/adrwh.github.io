@@ -17,16 +17,15 @@
       <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>https://adrwh.github.io/blog/ansible-macos-kerberos/</guid>
-      <description>This article shows you how to setup Ansible on your Mac to connect to remote Windows Domain Servers/Workstations using secure Kerberos.
-Ansible supports authentication to Windows using NTLM over http (bad), NTLM over https (better) our Kerberos over HTTPS (best). Surprisingly it&#39;s the easiest to setup also, so no excuses.
-We&#39;re going to cover the following setup requirements.
- Installing Pywinrm  </description>
+      <description>Ansible supports authentication to Windows using NTLM over http (bad), NTLM over https (better) or Kerberos over HTTPS (best). Surprisingly it&#39;s the easiest to setup also, so no excuses. Ansible&#39;s documentation states that if your running in a domain environment, Kerberos should be used over NTLM.
+We&#39;re going to cover the following setup requirements, then we will throw a couple commands at Windows to prove we have successfully authed.
+Installing the requirements As i said, Kerberos is already installed on your Mac, so we just need to install the python winrm library.</description>
     </item>
     
     <item>
       <title>Creating Watchers in Elasticsearch to catch Domain Admin security group changes</title>
       <link>https://adrwh.github.io/blog/elastic-watchers/</link>
-      <pubDate>Thu, 23 Jan 2020 21:27:54 +1100</pubDate>
+      <pubDate>Thu, 23 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>https://adrwh.github.io/blog/elastic-watchers/</guid>
       <description>We are going to setup an alert for whenever our Domain Admin group is changed. This is great for security context as well as general auditing.
@@ -37,7 +36,7 @@ We&#39;re going to cover the following setup requirements.
     <item>
       <title>MS Teams Channel Conversation &#34;Backup&#34;</title>
       <link>https://adrwh.github.io/blog/msteams-backup/</link>
-      <pubDate>Wed, 01 Jan 2020 15:38:04 +1100</pubDate>
+      <pubDate>Wed, 01 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>https://adrwh.github.io/blog/msteams-backup/</guid>
       <description>We use Microsoft Teams, and probably as most, create a new team when it was first released, however have now decided to move to a new Team. This is all fine, but when we went looking for a &amp;ldquo;migration&amp;rdquo; pathway, there wasn&#39;t one. Instead we settled on making a backup/copy for historical purposes.

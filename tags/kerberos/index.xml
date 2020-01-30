@@ -17,10 +17,9 @@
       <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>https://adrwh.github.io/blog/ansible-macos-kerberos/</guid>
-      <description>This article shows you how to setup Ansible on your Mac to connect to remote Windows Domain Servers/Workstations using secure Kerberos.
-Ansible supports authentication to Windows using NTLM over http (bad), NTLM over https (better) our Kerberos over HTTPS (best). Surprisingly it&#39;s the easiest to setup also, so no excuses.
-We&#39;re going to cover the following setup requirements.
- Installing Pywinrm  </description>
+      <description>Ansible supports authentication to Windows using NTLM over http (bad), NTLM over https (better) or Kerberos over HTTPS (best). Surprisingly it&#39;s the easiest to setup also, so no excuses. Ansible&#39;s documentation states that if your running in a domain environment, Kerberos should be used over NTLM.
+We&#39;re going to cover the following setup requirements, then we will throw a couple commands at Windows to prove we have successfully authed.
+Installing the requirements As i said, Kerberos is already installed on your Mac, so we just need to install the python winrm library.</description>
     </item>
     
   </channel>

@@ -6,7 +6,7 @@
     <description>Recent content in teams on ADRW</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 01 Jan 2020 15:38:04 +1100</lastBuildDate>
+    <lastBuildDate>Wed, 01 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://adrwh.github.io/tags/teams/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>MS Teams Channel Conversation &#34;Backup&#34;</title>
       <link>https://adrwh.github.io/blog/msteams-backup/</link>
-      <pubDate>Wed, 01 Jan 2020 15:38:04 +1100</pubDate>
+      <pubDate>Wed, 01 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>https://adrwh.github.io/blog/msteams-backup/</guid>
       <description>We use Microsoft Teams, and probably as most, create a new team when it was first released, however have now decided to move to a new Team. This is all fine, but when we went looking for a &amp;ldquo;migration&amp;rdquo; pathway, there wasn&#39;t one. Instead we settled on making a backup/copy for historical purposes.
