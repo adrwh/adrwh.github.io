@@ -51,7 +51,7 @@ a:link,a:visited,a:hover {
         
     <p><p>In this post i'll show you one way you can interact with Microsoft Teams (or any API) in your ansible playbooks.  The idea behind doing this was initially to provide a simple way to log progress from the command line, seeing as thats where they already spend a lot of time, but obviously there are many use cases for something like this.  Maybe you want your playbook to interact with other messaging APIs while it runs, or send progress updates to other team members etc.</p>
 <p>To set this up, you need a Microsoft Team, the <code>uri</code> ansible module and a bit of creativity.</p>
-<p>First up create a new Role, i called mine &ldquo;lines&rdquo;, because i just want to send lines to Teams.  Create the following directory and file structure.</p>
+<p>First up create a new Role, i called mine &ldquo;teams-chttr&rdquo;, because i just want to send lines to Teams.  Create the following directory and file structure.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">roles/lines
 ├── defaults
 │   └── main.yml
@@ -83,6 +83,7 @@ webhook: <span style="color:#e6db74">&#39;https://outlook.office.com/webhook/you
 <p><code>ansible-playbook msteams.yml -e &quot;l='foo bar bang'&quot;</code></p>
 <p>You should see a message like this appear in Teams.</p>
 <p><img src="/img/ansible-teams-api.png" alt="ansible-teams-api-message"></p>
+<p>You can get the Role and full source code here <a href="https://github.com/adrwh/ansible-role-teams-chttr">https://github.com/adrwh/ansible-role-teams-chttr</a></p>
 </p>
 </div>
 <div id="comments">
