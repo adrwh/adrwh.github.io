@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" href="/css/syntax.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1,h2,h3,h4,h5 {
+    font-family: "Raleway", sans-serif;
+}
+a:link,a:visited,a:hover {
+     text-decoration: none;
+}
+</style>
+</head>
+<body>
+  
+
+
+
+<section class="section">
+
+  <div class="container">
+    
+<div class="content">
+    <h3 class="title">Using ansible to post MS Teams messages</h3>
+        
+
+            Feb 2, 2020
+
+        
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/ansible">ansible</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/ms-teams">ms teams</a>
+            </span>
+            
+            
+            <span class="tag">
+                <a href="https://adrwh.github.io/tags/api">api</a>
+            </span>
+            
+        
+    <p><p>In this post i'll show you one way you can interact with Microsoft Teams (or any API) in your ansible playbooks.  The idea behind doing this was initially to provide a simple way to log progress from the command line, seeing as thats where they already spend a lot of time, but obviously there are many use cases for something like this.  Maybe you want your playbook to interact with other messaging APIs while it runs, or send progress updates to other team members etc.</p>
+<p>To set this up, you need a Microsoft Team, the <code>uri</code> ansible module and a bit of creativity.</p>
+<p>First up create a new Role, i called mine &ldquo;lines&rdquo;, because i just want to send lines to Teams.  Create the following directory and file structure.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">roles/lines
+├── defaults
+│   └── main.yml
+├── tasks
+│   └── main.yml
+└── templates
+    └── message.j2
+
+<span style="color:#ae81ff">3</span> directories, <span style="color:#ae81ff">3</span> files
+</code></pre></div><p><code>roles/lines/defaults/main.yml</code> holds default variables for the role.  We will create a <code>message</code> variable to store message we post to Teams, as well a <code>webhook</code> variable to store our Teams webhook url here.  The <code>message</code> variable does a lookup and grabs the contents of our message.j2 template file.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">---
+message: <span style="color:#e6db74">&#34;{{ lookup(&#39;template&#39;, &#39;message.j2&#39;) }}&#34;</span>
+webhook: <span style="color:#e6db74">&#39;https://outlook.office.com/webhook/your_webhook_url&#39;</span>
+</code></pre></div><p><code>roles/lines/templates/message.j2</code> holds the specific JSON message structure required by MS Teams, used as the body we POST to the webhook.  The <code>text</code> string is the important bit, you can format that however you wish.  You can even go and create advanced and interactive Teams Message cards, play here <a href="https://amdesigner.azurewebsites.net/">https://amdesigner.azurewebsites.net/</a>.  In the <code>text</code> string i have included the current datetime, the current user and additional text they may wish to supply from the command line.  Note: the <code>{{ l }}</code> variable is supplied on the command line, you can simply remove this if you don't need/want it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;AdaptiveCard&#34;</span>,
+    <span style="color:#e6db74">&#34;text&#34;</span>: <span style="color:#e6db74">&#34;{{ ansible_date_time.date }}: ({{ ansible_user_id }}) {{ l }}&#34;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>roles/lines/tasks/main.yml</code> contains the ansible task to post to Teams.  We are using the built in <code>uri</code> module, you can see details of how to use it here <a href="https://docs.ansible.com/ansible/latest/modules/uri_module.html">https://docs.ansible.com/ansible/latest/modules/uri_module.html</a>.  We are using the <code>webook</code> and <code>message</code> variables we defined in <code>defaul/main.yml</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">---
+<span style="color:#75715e"># This role logs a line to MS Teams</span>
+- name: Log lines to MS Teams
+  uri:
+    url: <span style="color:#e6db74">&#34;{{ webhook }}&#34;</span>
+    body: <span style="color:#e6db74">&#34;{{ message }}&#34;</span>
+    body_format: json
+    method: POST
+</code></pre></div><p>Now simply include this Role in your playbook and you can execute it from the comand line like this.</p>
+<p><code>ansible-playbook msteams.yml -e &quot;l='foo bar bang'&quot;</code></p>
+<p>You should see a message like this appear in Teams.</p>
+<p><img src="/img/ansible-teams-api.png" alt="ansible-teams-api-message"></p>
+</p>
+</div>
+<div id="comments">
+
+</div>
+
+  </div>
+
+</section>
+
+
+
+<footer class="footer">
+    <div class="tabs is-small">
+        <ul>
+          <li class="is-active"><a class="navbar-item" href="/">home</a></li>
+          <li><a href="/blog">posts</a></li>
+          <li><a href="/tags">tags</a></li>
+        </ul>
+      </div>
+      <div class="">
+        <a href="https://bulma.io">
+          <img src="/img/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+        </a>
+      </div>
+</footer>
+
+
+</body>
+</html>

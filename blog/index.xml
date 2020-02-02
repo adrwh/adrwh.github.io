@@ -6,10 +6,19 @@
     <description>Recent content in blog on ADRW</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 02 Feb 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://adrwh.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using ansible to post MS Teams messages</title>
+      <link>https://adrwh.github.io/blog/ansible-api-post-teams/</link>
+      <pubDate>Sun, 02 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://adrwh.github.io/blog/ansible-api-post-teams/</guid>
+      <description>In this post i&#39;ll show you one way you can interact with Microsoft Teams (or any API) in your ansible playbooks. The idea behind doing this was initially to provide a simple way to log progress from the command line, seeing as thats where they already spend a lot of time, but obviously there are many use cases for something like this. Maybe you want your playbook to interact with other messaging APIs while it runs, or send progress updates to other team members etc.</description>
+    </item>
     
     <item>
       <title>Setup Ansible on your Mac to connect to remote Windows Domain Servers/Workstations using secure Kerberos</title>
